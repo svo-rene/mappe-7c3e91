@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow"><meta name="referrer" content="no-referrer">
+<title>Mappe</title>
+<style>
+:root{--bg:#f5f6f8;--fl:#fff;--tx:#1b2230;--ms:#5b6475;--rand:#dde1e8;--akz:#1d4ed8;--akz-bg:#e8eefc;--info:#1d4ed8;--phy:#b45309;--fehl:#b42318;--schatten:0 1px 3px rgba(16,24,40,.06),0 1px 2px rgba(16,24,40,.04)}
+@media (prefers-color-scheme:dark){:root{--bg:#12161d;--fl:#1b212b;--tx:#e6e9ef;--ms:#9aa3b2;--rand:#2c3440;--akz:#8fb0ff;--akz-bg:#1f2a44;--info:#8fb0ff;--phy:#f0a54a;--fehl:#ff8a80;--schatten:none}}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--tx)}
+button,input{font:inherit;color:inherit}
+.anmelden{min-height:100vh;display:grid;place-items:center;padding:16px}
+.anmelden form{background:var(--fl);border:1px solid var(--rand);border-radius:14px;padding:28px;width:min(360px,100%);box-shadow:var(--schatten)}
+.anmelden h1{font-size:1.1rem;margin:0 0 16px}
+.anmelden input[type=password]{width:100%;padding:10px 12px;border:1px solid var(--rand);border-radius:9px;background:var(--bg)}
+.anmelden label{display:flex;gap:8px;align-items:center;margin:12px 0;font-size:.9rem;color:var(--ms)}
+.knopf{padding:10px 16px;border:0;border-radius:9px;background:var(--akz);color:#fff;cursor:pointer}
+@media (prefers-color-scheme:dark){.knopf{color:#0e1420}}
+.anmelden .knopf{width:100%}
+#meldung{color:var(--fehl);font-size:.9rem;min-height:1.3em;margin:10px 0 0}
+header{position:sticky;top:0;z-index:2;background:var(--bg);border-bottom:1px solid var(--rand)}
+.kopf{max-width:1100px;margin:0 auto;padding:12px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.kopf h1{font-size:1.1rem;margin:0;margin-right:auto}
+#suche{flex:1 1 220px;max-width:340px;padding:8px 12px;border:1px solid var(--rand);border-radius:9px;background:var(--fl)}
+.leise{background:none;border:1px solid var(--rand);border-radius:9px;padding:7px 12px;cursor:pointer;color:var(--ms);font-size:.9rem}
+.reiter{max-width:1100px;margin:0 auto;padding:0 16px 10px;display:flex;gap:6px;flex-wrap:wrap}
+.reiter button{border:1px solid var(--rand);background:var(--fl);border-radius:999px;padding:4px 14px;cursor:pointer;font-size:.9rem}
+.reiter button[aria-pressed=true]{background:var(--akz-bg);border-color:var(--akz);color:var(--akz)}
+main{max-width:1100px;margin:0 auto;padding:16px 16px 48px}
+h2{font-size:1rem;margin:28px 0 10px;display:flex;align-items:center;gap:8px}
+h2 .punkt{width:10px;height:10px;border-radius:50%}
+h3{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ms);margin:16px 0 6px;font-weight:600}
+.raster{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}
+.karte{display:flex;gap:10px;align-items:center;background:var(--fl);border:1px solid var(--rand);border-radius:10px;padding:10px 12px;text-decoration:none;color:inherit;box-shadow:var(--schatten);min-width:0}
+.karte:hover{border-color:var(--akz)}
+.karte .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.karte .klein{font-size:.78rem;color:var(--ms);white-space:nowrap}
+.marke{font-size:.7rem;font-weight:600;border-radius:5px;padding:1px 6px;border:1px solid currentColor;white-space:nowrap}
+.f-Informatik{color:var(--info)} .f-Physik{color:var(--phy)}
+.aktuell{background:var(--akz-bg);border-radius:12px;padding:4px 14px 14px;margin-top:8px}
+.leer{color:var(--ms)}
+/* Übersicht nach Kurs -> Lernbereich */
+:root{--k-lk11:#1d4ed8;--k-lk12:#7c3aed;--k-phy7:#b45309}
+@media (prefers-color-scheme:dark){:root{--k-lk11:#8fb0ff;--k-lk12:#c4a5ff;--k-phy7:#f0a54a}}
+.reiter .pk{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
+.abschnitt{margin:22px 0 8px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.abschnitt h2{margin:0;font-size:1.15rem}
+.abschnitt .zus{color:var(--ms);font-size:.9rem}
+.abschnitt .rechts{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.kursblock{border-top:4px solid var(--kf);margin-top:30px}
+.knopfl{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--rand);background:var(--fl);border-radius:8px;padding:4px 10px;font-size:.85rem;color:inherit;text-decoration:none}
+.knopfl:hover{border-color:var(--akz)}
+.tage{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(min(250px,85%),1fr);gap:10px;overflow-x:auto;padding:4px 2px 10px;scroll-snap-type:x mandatory}
+.tag{background:var(--fl);border:1px solid var(--rand);border-radius:12px;padding:10px 12px;scroll-snap-align:start;box-shadow:var(--schatten);min-width:0}
+.tag.heute{border-color:var(--akz);box-shadow:0 0 0 2px var(--akz-bg)}
+.tag.vorbei{opacity:.62}
+.tag .kopf2{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.tag .rel{font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--ms)}
+.tag.heute .rel,.tag.morgen .rel{color:var(--akz)}
+.zeile{display:flex;gap:8px;align-items:center;padding:5px 6px;margin:0 -6px;border-radius:7px;text-decoration:none;color:inherit;min-width:0}
+.zeile:hover{background:var(--akz-bg)}
+.zeile .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.zeile .klein{font-size:.75rem;color:var(--ms);white-space:nowrap}
+.sym{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font-size:.7rem;font-weight:700;flex:none;background:var(--bg);color:var(--ms)}
+.sym.Folien{background:var(--akz-bg);color:var(--akz)}
+.kchip{font-size:.68rem;font-weight:700;border-radius:5px;padding:0 5px;color:#fff;background:var(--kc);white-space:nowrap}
+@media (prefers-color-scheme:dark){.kchip{color:#10141b}}
+.bereiche{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr));gap:12px}
+.bereich{background:var(--fl);border:1px solid var(--rand);border-radius:12px;padding:12px 14px;box-shadow:var(--schatten);min-width:0}
+.bereich.laeuft{grid-column:1/-1;border-color:var(--kf);box-shadow:0 0 0 2px color-mix(in srgb,var(--kf) 18%,transparent)}
+.bereich.breit{grid-column:1/-1}
+.bereich h3{all:unset;display:flex;gap:8px;align-items:center;font-weight:700;font-size:1rem;margin-bottom:2px}
+.bereich .lauf{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--kf);border:1px solid var(--kf);border-radius:999px;padding:0 7px}
+.bereich.laeuft .innen{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:0 22px}
+.gruppe{margin-top:8px;min-width:0}
+.gruppe .gt{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ms);margin-bottom:2px}
+.paare{display:flex;flex-wrap:wrap;gap:6px}
+.paar{display:inline-flex;align-items:center;border:1px solid var(--rand);border-radius:8px;overflow:hidden;font-size:.85rem}
+.paar span{padding:3px 8px;color:var(--ms)}
+.paar a{padding:3px 8px;text-decoration:none;color:var(--akz);border-left:1px solid var(--rand)}
+.paar a:hover{background:var(--akz-bg)}
+details.alt summary{cursor:pointer;font-size:.8rem;color:var(--ms);margin-top:6px}
+.leiste{position:fixed;inset:0 0 auto 0;height:44px;display:flex;gap:10px;align-items:center;padding:0 12px;background:var(--fl);border-bottom:1px solid var(--rand)}
+.leiste b{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.leiste a{color:var(--akz);text-decoration:none;font-size:.9rem;white-space:nowrap}
+iframe.pdf{position:fixed;top:44px;left:0;width:100%;height:calc(100% - 44px);border:0}
+.mitte{min-height:100vh;display:grid;place-items:center;color:var(--ms);padding:16px;text-align:center}
+</style></head><body>
+<div id="app" class="mitte">Lädt …</div>
+<script>
+(()=>{ // alles lokal: Foliensätze werden per document.write in DIESE Seite geschrieben und dürfen keine Namen erben
+const D={"salt": "YBKYx2C/iAQ9CFtBSaYK3A==", "iter": 600000}, SEITE="anzeige", KEY="mappe-schluessel";
+const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const zu64=a=>btoa(String.fromCharCode(...new Uint8Array(a)));
+const app=document.getElementById("app");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function gemerkt(){for(const st of [sessionStorage,localStorage]){try{const v=JSON.parse(st.getItem(KEY)||"null");if(v&&v.salt===D.salt)return b64(v.bits)}catch(e){}}return null}
+function vergessen(){for(const st of [sessionStorage,localStorage]){try{st.removeItem(KEY)}catch(e){}}}
+async function ableiten(pw){const k=await crypto.subtle.importKey("raw",new TextEncoder().encode(pw),"PBKDF2",false,["deriveBits"]);
+ return new Uint8Array(await crypto.subtle.deriveBits({name:"PBKDF2",salt:b64(D.salt),iterations:D.iter,hash:"SHA-256"},k,512))}
+async function holen(pfad,bits){
+ const r=await fetch(pfad,{cache:"no-cache"});if(!r.ok)throw new Error("nicht gefunden");
+ const roh=new Uint8Array(await r.arrayBuffer());
+ const k=await crypto.subtle.importKey("raw",bits.slice(0,32),"AES-GCM",false,["decrypt"]);
+ const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:roh.slice(0,12)},k,roh.slice(12));
+ return new Uint8Array(await new Response(new Blob([pt]).stream().pipeThrough(new DecompressionStream("deflate"))).arrayBuffer())}
+
+function anmeldung(weiter){
+ app.className="anmelden";
+ app.innerHTML='<form><h1>Unterrichtsmappe</h1><input type="password" id="pw" placeholder="Passwort" autocomplete="current-password"><label><input type="checkbox" id="merken"> auf diesem Gerät merken</label><button class="knopf">Öffnen</button><p id="meldung"></p></form>';
+ const pw=document.getElementById("pw");pw.focus();
+ app.querySelector("form").onsubmit=async ev=>{ev.preventDefault();const m=document.getElementById("meldung");m.textContent="Entschlüssele …";
+  const bits=await ableiten(pw.value);let vz;
+  try{vz=await holen("i.bin",bits)}catch(e){m.textContent="Passwort falsch.";return}
+  const wert=JSON.stringify({salt:D.salt,bits:zu64(bits)});
+  try{sessionStorage.setItem(KEY,wert);if(document.getElementById("merken").checked)localStorage.setItem(KEY,wert)}catch(e){}
+  weiter(bits,vz)};
+}
+
+// ---------------------------------------------------------------- Übersicht
+function uebersicht(bits,roh){
+ const vz=JSON.parse(new TextDecoder().decode(roh));
+ const ziel=new URLSearchParams(location.search).get("weiter");
+ if(ziel&&/^\?f=[0-9a-f]+(#[\w-]*)?$/.test(ziel)){location.replace("v.html"+ziel);return}
+ const KURSE=vz.kurse||[];
+ let kurs="alle", suche="";
+ try{kurs=sessionStorage.getItem("mappe-kurs")||"alle"}catch(e){}
+ if(kurs!=="alle"&&!KURSE.some(k=>k.id===kurs))kurs="alle";
+ app.className="";
+ app.innerHTML=`<header><div class="kopf"><h1>${esc(vz.titel)}</h1><input id="suche" type="search" placeholder="Suchen …  ( / )" aria-label="Suchen"><button class="leise" id="sperren">Sperren</button></div><div class="reiter" id="reiter"></div></header><main id="liste"></main>`;
+ const reiter=document.getElementById("reiter"), liste=document.getElementById("liste");
+ const heute=new Date();heute.setHours(0,0,0,0);
+ const tageBis=d=>Math.round((new Date(d+"T00:00")-heute)/864e5);
+ const nahDran=e=>e.datum&&tageBis(e.datum)>=-10&&tageBis(e.datum)<=21;
+ function datumText(d){const [j,m,t]=d.split("-");const w=["So","Mo","Di","Mi","Do","Fr","Sa"][new Date(+j,m-1,+t).getDay()];return `${w} ${+t}.${+m}.`}
+ function relText(n){return n===0?"heute":n===1?"morgen":n===-1?"gestern":n<0?`vor ${-n} Tagen`:`in ${n} Tagen`}
+ const kurzKurs=id=>({lk11:"LK 11",lk12:"LK 12",phy7:"Phy 7"}[id]||id);
+ const chips=e=>(e.kurse||[]).map(k=>`<span class="kchip" style="--kc:var(--k-${esc(k)})">${esc(kurzKurs(k))}</span>`).join("");
+ const SYM={Folien:"▶",Tafelbilder:"T","Zum Zeigen":"Z","Musterlösungen":"✓",Material:"M",Stundenzettel:"S",Planung:"P"};
+ // Titel im Lernbereich kürzen: „LB 2/3 Algorithmen – Dateien zum Zeigen, Mo 23.11.2026“ -> „Dateien zum Zeigen, Mo 23.11.“
+ function kurz(e){let t=e.titel;
+  if(e.bereich){if(e.rolle==="Folien"&&/^LB [\d\/]+ /.test(t)&&!/–/.test(t))return "Foliensatz";
+   t=t.replace(/^LB [\d\/]+ [^–]*–\s*/,"").replace(/^LB [\d\/]+ /,"")}
+  return t.replace(/(\d{1,2}\.\d{1,2}\.)20\d\d/,"$1")}
+ // im Tagesstreifen: Datum steht schon oben, dafür den Lernbereich nennen
+ function kurzTag(e){if(e.rolle==="Stundenzettel")return /hospitation/i.test(e.titel)?"Stundenzettel (Hospitation)":"Stundenzettel";
+  let t=kurz(e).replace(/,?\s*(Mo|Di|Mi|Do|Fr|Sa|So)\s+\d{1,2}\.\d{1,2}\.?(\s*–)?/,"").trim();
+  const lb=(e.bereich||"").replace(/^LB [\d\/]+ /,"").split(" ")[0];
+  return lb&&e.rolle!=="Material"?`${lb}: ${t}`:t}
+ function zeile(e,mitKurs){return `<a class="zeile" href="v.html?f=${e.id}"><span class="sym ${esc(e.rolle)}">${SYM[e.rolle]||"•"}</span><span class="t" title="${esc(e.titel)}">${esc(mitKurs?kurzTag(e):kurz(e))}</span>${e.typ!=="html"?`<span class="klein">${esc(e.typ.toUpperCase())}</span>`:""}${mitKurs?chips(e):""}</a>`}
+ function paare(liste){const g=new Map();for(const e of liste){const k=e.paar||e.id;if(!g.has(k))g.set(k,{titel:e.titel,a:null,l:null});const p=g.get(k);if(e.loes)p.l=e;else p.a=e}
+  return `<div class="paare">${[...g.values()].map(p=>`<span class="paar"><span>${esc(p.titel.replace(/^Tafelbild\s*/,""))}</span>${p.a?`<a href="v.html?f=${p.a.id}">Tafel</a>`:""}${p.l?`<a href="v.html?f=${p.l.id}">Lösung</a>`:""}</span>`).join("")}</div>`}
+ function gruppe(titel,inhalt){return inhalt?`<div class="gruppe"><div class="gt">${esc(titel)}</div>${inhalt}</div>`:""}
+ const ROLLEN=["Folien","Zum Zeigen","Musterlösungen","Material","Tafelbilder"];
+ function bereichKarte(name,eb,kf){
+  const laeuft=eb.some(nahDran);
+  let innen="";
+  for(const r of ROLLEN){const er=eb.filter(e=>e.rolle===r);if(!er.length)continue;
+   if(r==="Tafelbilder"){const mp=er.filter(e=>e.paar),op=er.filter(e=>!e.paar);
+    innen+=gruppe(r,op.map(e=>zeile(e)).join("")+(mp.length?paare(mp):""));continue}
+   if(r==="Zum Zeigen"){er.sort((x,y)=>(y.datum||"")<(x.datum||"")?-1:1);
+    const neu=er.filter(e=>!e.datum||tageBis(e.datum)>=-7),alt=er.filter(e=>e.datum&&tageBis(e.datum)<-7);
+    innen+=gruppe(r,neu.map(e=>zeile(e)).join("")+(alt.length?`<details class="alt"><summary>${alt.length} ältere</summary>${alt.map(e=>zeile(e)).join("")}</details>`:""));continue}
+   innen+=gruppe(r,er.map(e=>zeile(e)).join(""))}
+  const breit=!laeuft&&eb.filter(e=>e.paar).length>=12;
+  return `<section class="bereich${laeuft?" laeuft":""}${breit?" breit":""}" style="--kf:${kf}"><h3>${esc(name)}${laeuft?'<span class="lauf">läuft gerade</span>':""}</h3><div class="innen">${innen}</div></section>`}
+ function tageStreifen(sicht){
+  const datiert=sicht.filter(e=>e.datum&&!["Planung","Tafelbilder","Folien"].includes(e.rolle));
+  const tage=[...new Set(datiert.map(e=>e.datum))].filter(d=>tageBis(d)>=-4&&tageBis(d)<=21).sort();
+  if(!tage.length)return "";
+  const RF={Stundenzettel:0,"Zum Zeigen":1,"Musterlösungen":2,Material:3};
+  const spalten=tage.map(d=>{const n=tageBis(d),es=datiert.filter(e=>e.datum===d).sort((a,b)=>(RF[a.rolle]??9)-(RF[b.rolle]??9));
+   const kl=n===0?"heute":n===1?"morgen":n<0?"vorbei":"";
+   return `<div class="tag ${kl}"><div class="kopf2"><b>${datumText(d)}</b><span class="rel">${relText(n)}</span></div>${es.map(e=>zeile(e,true)).join("")}</div>`}).join("");
+  return `<div class="abschnitt"><h2>Unterrichtstage</h2><span class="zus">Stundenzettel und Material je Tag</span></div><div class="tage" id="tage">${spalten}</div>`}
+ function kursAbschnitt(k,sicht){
+  const ek=sicht.filter(e=>(e.kurse||[]).includes(k.id));if(!ek.length)return "";
+  const kf=`var(--k-${k.id})`;
+  const plan=ek.filter(e=>e.rolle==="Planung");
+  const altZ=ek.filter(e=>e.rolle==="Stundenzettel"&&e.datum&&tageBis(e.datum)<-4).sort((x,y)=>y.datum<x.datum?-1:1);
+  let h=`<div class="kursblock" style="--kf:${kf}"><div class="abschnitt"><h2>${esc(k.name)}</h2>${k.zusatz?`<span class="zus">${esc(k.zusatz)}</span>`:""}<div class="rechts">${plan.map(e=>`<a class="knopfl" href="v.html?f=${e.id}">${esc(e.titel.replace(/\s*\(.*?\)/,"").replace(/,\s*Stand.*/,""))}</a>`).join("")}</div></div>`;
+  const namen=[...new Set(ek.filter(e=>e.bereich).sort((a,b)=>a.bord-b.bord).map(e=>e.bereich))];
+  const karten=namen.map(n=>({n,eb:ek.filter(e=>e.bereich===n)}));
+  karten.sort((a,b)=>b.eb.some(nahDran)-a.eb.some(nahDran));
+  h+=`<div class="bereiche">${karten.map(x=>bereichKarte(x.n,x.eb,kf)).join("")}</div>`;
+  if(altZ.length)h+=`<details class="alt"><summary>Frühere Stundenzettel (${altZ.length})</summary>${altZ.map(e=>zeile(e)).join("")}</details>`;
+  return h+"</div>"}
+ function zeichnen(){
+  reiter.innerHTML=[{id:"alle",name:"Alle Kurse"},...KURSE].map(k=>`<button aria-pressed="${k.id===kurs}" data-k="${esc(k.id)}">${k.id!=="alle"?`<span class="pk" style="background:var(--k-${esc(k.id)})"></span>`:""}${esc(k.name)}</button>`).join("");
+  const w=suche.toLowerCase().split(/\s+/).filter(Boolean);
+  const sicht=vz.eintraege.filter(e=>kurs==="alle"||(e.kurse||[]).includes(kurs));
+  let h="";
+  if(w.length){
+   const tr=sicht.filter(e=>w.every(x=>(e.titel+" "+e.bereich+" "+e.rolle+" "+(e.kurse||[]).map(kurzKurs).join(" ")+" "+e.fach).toLowerCase().includes(x)));
+   for(const k of KURSE){const ek=tr.filter(e=>(e.kurse||[])[0]===k.id);if(!ek.length)continue;
+    const nb=[...new Set(ek.map(e=>e.bereich||e.rolle))];
+    h+=`<div class="kursblock" style="--kf:var(--k-${k.id})"><div class="abschnitt"><h2>${esc(k.name)}</h2><span class="zus">${ek.length} Treffer</span></div><div class="bereiche">`+
+     nb.map(n=>`<section class="bereich" style="--kf:var(--k-${k.id})"><h3>${esc(n)}</h3>${ek.filter(e=>(e.bereich||e.rolle)===n).map(e=>zeile(e,true)).join("")}</section>`).join("")+"</div></div>"}
+   liste.innerHTML=h||'<p class="leer">Nichts gefunden.</p>';return}
+  h+=tageStreifen(sicht);
+  for(const k of KURSE){if(kurs==="alle"||kurs===k.id)h+=kursAbschnitt(k,sicht)}
+  liste.innerHTML=h||'<p class="leer">Nichts gefunden.</p>';
+  const t=document.getElementById("tage"),hz=t&&t.querySelector(".tag:not(.vorbei)");if(hz)t.scrollLeft=hz.offsetLeft-t.offsetLeft-4;
+ }
+ reiter.onclick=ev=>{const b=ev.target.closest("button");const k=b&&b.dataset.k;if(!k)return;kurs=k;try{sessionStorage.setItem("mappe-kurs",k)}catch(e){}zeichnen()};
+ document.getElementById("suche").oninput=ev=>{suche=ev.target.value;zeichnen()};
+ document.getElementById("sperren").onclick=()=>{vergessen();location.replace("index.html")};
+ document.addEventListener("keydown",ev=>{if(ev.key==="/"&&document.activeElement.id!=="suche"){ev.preventDefault();document.getElementById("suche").focus()}});
+ zeichnen();
+}
+
+// ---------------------------------------------------------------- Anzeige einer Datei
+async function anzeige(bits){
+ const id=new URLSearchParams(location.search).get("f");
+ if(!id||!/^[0-9a-f]+$/.test(id)){location.replace("index.html");return}
+ let roh;
+ try{roh=await holen("d/"+id+".bin",bits)}catch(e){app.textContent="Datei nicht gefunden oder Passwort geändert.";vergessen();return}
+ const n=new DataView(roh.buffer).getUint32(0);
+ const kopf=JSON.parse(new TextDecoder().decode(roh.slice(4,4+n))), inhalt=roh.slice(4+n);
+ document.title=kopf.titel;
+ if(kopf.typ==="html"){document.open();document.write(new TextDecoder().decode(inhalt));document.close();
+  // eingebettete Materialdateien (data:-Links) als Download speichern statt öffnen
+  document.addEventListener("click",ev=>{const a=ev.target.closest&&ev.target.closest('a[href^="data:"]');if(!a)return;
+   ev.preventDefault();ev.stopPropagation();const h=a.getAttribute("href"),m=h.match(/;name=([^;,]+)/);
+   const name=a.getAttribute("download")||(m?decodeURIComponent(m[1]):"datei");
+   fetch(h).then(r=>r.blob()).then(bl=>{const x=document.createElement("a");x.href=URL.createObjectURL(bl);x.download=name;document.body.appendChild(x);x.click();x.remove()})},true);
+  return}
+ const url=URL.createObjectURL(new Blob([inhalt],{type:kopf.mime}));
+ app.className="";
+ app.innerHTML=`<div class="leiste"><a href="index.html">← Übersicht</a><b>${esc(kopf.titel)}</b><a href="${url}" download="${esc(kopf.name)}">Herunterladen</a></div>`+
+  (kopf.mime==="application/pdf"?`<iframe class="pdf" src="${url}" title="${esc(kopf.titel)}"></iframe>`:`<div class="mitte">Diese Datei kann der Browser nicht anzeigen – bitte herunterladen.</div>`);
+}
+
+(async()=>{
+ if(!window.crypto||!crypto.subtle){app.textContent="Dieser Browser kann die Mappe nicht entschlüsseln (nur über https oder localhost).";return}
+ const bits=gemerkt();
+ if(SEITE==="anzeige"){
+  if(bits)return anzeige(bits);
+  location.replace("index.html?weiter="+encodeURIComponent(location.search+location.hash));return}
+ if(bits){try{return uebersicht(bits,await holen("i.bin",bits))}catch(e){vergessen()}}
+ app.className="";anmeldung(uebersicht);
+})();
+})();
+</script></body></html>
